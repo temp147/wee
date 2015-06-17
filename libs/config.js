@@ -5,7 +5,7 @@ module.exports = {
     secret: 'secret',
     port: 3000,
     mp: {
-        appid: 'your appid',
+        appid: 'wx0ce2cd3f023755bf',
         token: 'ciicsh',
         encodingAESKey: 'AXY7qO8vrcNtQh0GjFyUjDquMDD53z4MJhnS6eyBHz1'
     },

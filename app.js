@@ -4,8 +4,6 @@ var favicon = require('serve-favicon');
 //var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-//load wechat intere
-var wechat = require('wechat');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -35,15 +33,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-//wechat test api
-app.use('/wechat',wechat(config.mp,function(req,res,next){
-    var message = req.weixin;
-    if(message.MsgType == 'text'){
-        res.reply({type:"text",content:"you input"+message.Content});
-        next();
-    }
-    next();
-}));
+
+
+//load wechat test api
+require('./routes')(app);
+
 
 
 // catch 404 and forward to error handler
