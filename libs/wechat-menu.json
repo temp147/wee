@@ -1,0 +1,64 @@
+{
+    "button": [
+        {
+            "name": "Acc",
+            "sub_button": [
+                {
+                    "type": "click",
+                    "name": "account",
+                    "key": "V1001_MY_ACCOUNT"
+                },
+                {
+                    "type": "click",
+                    "name": "project",
+                    "key": "V1002_BID_PROJECTS"
+                },
+                {
+                    "type": "click",
+                    "name": "plan",
+                    "key": "V1003_RETURN_PLAN"
+                },
+                {
+                    "type": "click",
+                    "name": "detail",
+                    "key": "V1004_TRANS_DETAIL"
+                },
+                {
+                    "type": "click",
+                    "name": "reg",
+                    "key": "V1005_REGISTER_BIND"
+                }
+            ]
+        },
+        {
+            "type": "view",
+            "name": "site",
+            "url": "http://wechat.ciicsh.com/"
+        },
+        {
+            "name": "task",
+            "sub_button": [
+                {
+                    "type": "view",
+                    "name": "task1",
+                    "url": "http://wechat.ciicsh.com/"
+                },
+                {
+                    "type": "click",
+                    "name": "task2",
+                    "key": "V1001_GOOD"
+                },
+                {
+                    "type": "view",
+                    "name": "join us",
+                    "url": "http://wechat.ciicsh.com/"
+                },
+                {
+                    "type": "view",
+                    "name": "app down",
+                    "url": "http://qiaole.sinaapp.com/"
+                }
+            ]
+        }
+    ]
+}
