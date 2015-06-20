@@ -10,7 +10,8 @@ var config = require('./libs/config');
 
 var fs = require('fs');
 
-var api = new wechatapi(config.mp.appid,config.secret,
+var api = new wechatapi(config.mp.appid,config.secret
+    ,
     function (callback) {
     // 传入一个获取全局token的方法
     fs.readFile('access_token.txt', 'utf8', function (err, txt) {
@@ -23,12 +24,33 @@ var api = new wechatapi(config.mp.appid,config.secret,
     // 请将token存储到全局，跨进程、跨机器级别的全局，比如写到数据库、redis等
     // 这样才能在cluster模式及多机情况下使用，以下为写入到文件的示例
         fs.writeFile('access_token.txt', JSON.stringify(token),callback)
-}
+    }
 );
 
 api.getLatestToken(function(err,token){
-    console.log(err);
-    console.log(token);
+//    console.log(err);
+//    console.log(token);
+});
+
+var menu = fs.readFileSync('./libs/wechat-menu.json');
+if(menu){
+    menu=JSON.parse(menu)
+}
+console.log(menu);
+
+api.createMenu(menu,function(err,result){
+//    console.log(err);
+//    console.log(result);
+});
+
+api.getMenu(function(err,result){
+//    console.log(err);
+//    console.log(result);
+});
+
+api.getMenuConfig(function(err,result){
+//    console.log(err);
+//    console.log(result);
 });
 
 //handle the http options method,response 204
@@ -42,11 +64,6 @@ module.exports = function(app){
 //        console.log(req);
 //        console.log(req.query.code);
 //        api.saveToken(req.query.code,function(){});
-        var menu = fs.readFileSync('./libs/wechat-menu.json');
-        if(menu){
-            menu=JSON.parse(menu)
-        }
-        api.createMenu(menu,function(err,result){});
         var message = req.weixin;
         if(message.MsgType == 'text'){
             res.reply({type:"text",content:"you input"+message.Content});
