@@ -29,28 +29,28 @@ var api = new wechatapi(config.mp.appid,config.secret
 
 api.getLatestToken(function(err,token){
 //    console.log(err);
-//    console.log(token);
+    console.log(token);
 });
 
 var menu = fs.readFileSync('./libs/wechat-menu.json');
 if(menu){
     menu=JSON.parse(menu)
 }
-console.log(menu);
+//console.log(menu);
 
-api.createMenu(menu,function(err,result){
-//    console.log(err);
-//    console.log(result);
-});
+//api.createMenu(menu,function(err,result){
+////    console.log(err);
+////    console.log(result);
+//});
 
 api.getMenu(function(err,result){
 //    console.log(err);
-//    console.log(result);
+    console.log(result);
 });
 
 api.getMenuConfig(function(err,result){
 //    console.log(err);
-//    console.log(result);
+    console.log(result);
 });
 
 //handle the http options method,response 204
