@@ -6,11 +6,12 @@
 var wechat = require('wechat');
 var wechatapi = require('wechat-api');
 //load config file
-var config = require('./libs/config');
+var wcconfig = require('./libs/wcconfig');
 
 var fs = require('fs');
 
-var api = new wechatapi(config.mp.appid,config.secret
+//get the wechat api token
+var api = new wechatapi(wcconfig.mp.appid,wcconfig.secret
     ,
     function (callback) {
     // 传入一个获取全局token的方法
@@ -60,7 +61,9 @@ function option (req,res){
 }
 
 module.exports = function(app){
-    app.use('/wechat',wechat(config.mp,function(req,res,next){
+
+//    app.use('/wechat/callback',wechatoauth.callback);
+    app.use('/wechat',wechat(wcconfig.mp,function(req,res,next){
 //        console.log(req);
 //        console.log(req.query.code);
 //        api.saveToken(req.query.code,function(){});
@@ -69,4 +72,6 @@ module.exports = function(app){
             res.reply({type:"text",content:"you input"+message.Content});
         }
     }));
+
+
 };

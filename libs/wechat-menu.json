@@ -33,7 +33,7 @@
         {
             "type": "view",
             "name": "site",
-            "url": "http://wechat.ciicsh.com/"
+            "url": "http://wechatdev.ciicsh.com/"
         },
         {
             "name": "task",
@@ -41,7 +41,7 @@
                 {
                     "type": "view",
                     "name": "task1",
-                    "url": "http://wechat.ciicsh.com/"
+                    "url": "http://wechatdev.ciicsh.com/"
                 },
                 {
                     "type": "click",
@@ -51,7 +51,7 @@
                 {
                     "type": "view",
                     "name": "join us",
-                    "url": "http://wechat.ciicsh.com/"
+                    "url": "http://wechatdev.ciicsh.com/"
                 },
                 {
                     "type": "view",

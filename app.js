@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 //load config file
-var config = require('./libs/config');
+var wcconfig = require('./libs/wcconfig');
 
 //use log4js for the log
 var log4js = require('log4js');
