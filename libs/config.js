@@ -3,5 +3,6 @@
  */
 
 module.exports={
-    port: 3000
+    port: 3000,
+    jwtsecret:'this is my se'
 };

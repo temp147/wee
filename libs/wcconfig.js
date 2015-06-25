@@ -12,5 +12,7 @@ module.exports = {
         token: 'YOUR token',
         encodingAESKey: 'YOUR encodingAESKey',
         corpId: 'YOUR corpId'
-    }
+    },
+//wechat oauth redirect url
+    oauthretureurl: 'http://wechatdev.ciicsh.com/callback.html'
 };
