@@ -75,3 +75,9 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+
+
+//todo: finish the jwt token setting
+//todo: add the user model
+//todo: test the forever function
+//todo: much more famaliar with mongoDB

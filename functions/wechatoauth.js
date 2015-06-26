@@ -35,3 +35,5 @@ exports.oauth = function (req,res,next){
         }
     })
 };
+
+//todo: think about what to do if user do not agree to login

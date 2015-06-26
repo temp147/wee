@@ -9,7 +9,7 @@ var assert = require('assert');
 //load config file
 var wcconfig = require('../libs/wcconfig');
 
-
+//todo: save the wechat api token into mysql
 //get the wechat api token
 var api = new wechatapi(wcconfig.mp.appid,wcconfig.secret
     ,
@@ -33,7 +33,7 @@ api.getLatestToken(function(err,token){
 });
 
 
-//todo: save the register
+//todo: save the register in mysql
 //register js sdk ticket handle
 /*
 api.registerTicketHandle(getTicketToken, saveTicketToken);
@@ -57,7 +57,7 @@ function saveTicketToken(type, ticketToken, callback) {
 
 
 
-
+//todo: create the menu create function and save the menu into DB
 var menu = fs.readFileSync('./libs/wechat-menu.json');
 if(menu){
     menu=JSON.parse(menu)

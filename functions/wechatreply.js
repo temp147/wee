@@ -15,3 +15,6 @@ exports.reply=wechat(wcconfig.mp,function(req,res,next){
         res.reply({type:"text",content:"you input"+message.Content});
     }
 });
+
+
+//todo: add more auto reply function and error handle.
