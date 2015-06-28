@@ -9,12 +9,15 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 //load config file
 var wcconfig = require('./libs/wcconfig');
+var config = require('./libs/config');
 
 //use log4js for the log
 var log4js = require('log4js');
 //load the log configuration
 log4js.configure('./libs/log4js_configuration.json');
 var logger = log4js.getLogger();
+
+var toobusy = require('toobusy');
 
 var app = express();
 
@@ -30,6 +33,28 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(function (req, res, next) {
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', config.crossdomain);
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    //res.setHeader('Access-Control-Allow-Credentials', true)
+    // Pass to next layer of middleware
+    if(toobusy()){
+        console.log('BUSY');
+        res.status(503).send("Mynodejs is stuck!!");
+    }
+    else{
+        next();
+    }
+
+});
+
 
 app.use('/', routes);
 app.use('/users', users);

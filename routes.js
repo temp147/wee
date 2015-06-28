@@ -14,9 +14,9 @@ function option (req,res){
 
 module.exports = function(app){
 //wechat oauth login callback api
-    app.use('/login/wechat/oauth',wechatoauth.oauth);
+    app.use('/login/wechat/oauth',wechatoauth.verifyOauth);
 //    get login url
-    app.get('/login/wechat/getauthurl',wechatoauth.getauthurl);
+    app.get('/login/wechat/getauthurl',wechatoauth.getAuthUrl);
 /*
 
    get wechat sdk config
@@ -32,7 +32,7 @@ response: {
         jsApiList: [] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
 }
 */
-    app.use('/wechat/sdk/getjsconfig',wechatapi.getwechatjsconfig);
+    app.use('/wechat/sdk/getjsconfig',wechatapi.getWechatJsConfig);
 //    wechat communicate api
     app.use('/wechat', wechatreply.reply);
 

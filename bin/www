@@ -8,13 +8,17 @@ var app = require('../app');
 var debug = require('debug')('wee:server');
 var http = require('http');
 var config = require('../libs/config');
+var models = require('../models');
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || config.port);
+var port =  config.port;
 app.set('port', port);
 
+//load models
+
+models.sequelize.sync().then(function(){
 /**
  * Create HTTP server.
  */
@@ -89,3 +93,7 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+}).catch(function(error){
+    console.log(error);
+})
+;

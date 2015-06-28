@@ -2,16 +2,19 @@
  * Created by root on 6/25/15.
  */
 
-var wechatapi = require('wechat-api');
+var Wechatapi = require('wechat-api');
 var fs = require('fs');
 var assert = require('assert');
-
+//load the models
+var models = require('../models');
+var Wechatkey = models.wechatkey;
 //load config file
 var wcconfig = require('../libs/wcconfig');
 
 //todo: save the wechat api token into mysql
 //get the wechat api token
-var api = new wechatapi(wcconfig.mp.appid,wcconfig.secret
+/*
+var api = new Wechatapi(wcconfig.mp.appid,wcconfig.secret
     ,
     function (callback) {
 //read the token的from file方法
@@ -26,13 +29,59 @@ var api = new wechatapi(wcconfig.mp.appid,wcconfig.secret
         fs.writeFile('./access_token.txt', JSON.stringify(token),callback)
     }
 );
+*/
+
+var api = new Wechatapi(wcconfig.mp.appid,wcconfig.secret
+    ,
+//get the token from database
+    function(cb){
+        Wechatkey.findOne({where:{
+            keytype: 'access_token'
+            }
+        }).then(function(wechatkey){
+//            console.log(wechatkey);
+            if(wechatkey){
+//                console.log(JSON.parse(wechatkey.keyvalues));
+                cb(null,JSON.parse(wechatkey.keyvalues))
+            }
+            else{
+                cb('blank',null);
+            }
+        }).catch(function(err){
+//            console.log(err);
+            cb(err,null);
+        })
+    }
+//save the token to database
+    ,function(token,cb){
+        Wechatkey.findOne({where:{
+            keytype:'access_token'
+            }
+        }).then(function(wechatkey){
+            if(wechatkey){
+                wechatkey.keyvalues=JSON.stringify(token);
+                wechatkey.save()
+                    .then(function(){
+                        cb(null,null);
+                    })
+                    .catch(function(err){
+                        cb(err,null)
+                    })
+            }
+        }).catch(function(err){
+            cb(err,null);
+        })
+
+    }
+);
 
 api.getLatestToken(function(err,token){
-    console.log(err);
+//    console.log(err);
 //    console.log(token);
 });
 
 
+//wechat JS SDK API
 //todo: save the register in mysql
 //register js sdk ticket handle
 /*
@@ -52,33 +101,79 @@ function saveTicketToken(type, ticketToken, callback) {
         callback(null);
     });
 }
-
 */
-
-
-
-//todo: create the menu create function and save the menu into DB
-var menu = fs.readFileSync('./libs/wechat-menu.json');
-if(menu){
-    menu=JSON.parse(menu)
+api.registerTicketHandle(getTicketToken, saveTicketToken);
+/**
+ * get WeChat js SDK config params
+ *
+ * @param {String} type (method post: body{url:URL})
+ * @param {String} cb
+ * @api private
+ */
+function getTicketToken(type,cb){
+//    console.log(type);
+    Wechatkey.findOrCreate({
+        where:{
+            keytype: type
+        },
+        defaults:{
+            keytype: type,
+            keyvalues:"{ 'ticket': 'sM4AOVdWfPE4DxkXGEs8VMqZSZfE1OkvX6gmFigI2I-Q_xtHl_rruJIyb_Wa1pVwyZqt2pmPRSeU2fvXZ7X5eg','expireTime': '1435503264637' }"
+        }
+    })
+        .spread(function(wechatkey,created){
+            if(created){
+                cb(null,'')
+            }
+            else{
+                cb(null,JSON.parse(wechatkey.keyvalues))
+            }
+        })
+        .catch(function(err){
+            console.log(err);
+            cb(err,null)
+        })
 }
-//console.log(menu);
+/**
+ * save WeChat js SDK config params
+ *
+ * @param {String} type (method post: body{url:URL})
+ * @param {String} ticketToken
+ * @param {String} cb
+ * @api private
+ */
 
-exports.updatewechatmenu=api.createMenu(menu,function(err,result){
-//    console.log(err);
-//    console.log(result);
-});
-
-exports.getwechatmenu = api.getMenu(function(err,result){
-//    console.log(err);
-//    console.log(result);
-});
-
-exports.getwechatmenuconfig= api.getMenuConfig(function(err,result){
-//    console.log(err);
-//    console.log(result);
-});
-
+function saveTicketToken(type,ticketToken,cb){
+//    console.log(ticketToken);
+    Wechatkey.findOrCreate({
+        where:{
+            keytype:type
+        },
+        defaults:{
+            keytype:type,
+            keyvalues:JSON.stringify(ticketToken)
+        }
+    })
+        .spread(function(wechatkey,created){
+            if(created){
+//                console.log(created);
+                cb(null)
+            }
+            else{
+                wechatkey.keyvalues=JSON.stringify(ticketToken);
+                wechatkey.save()
+                    .then(function(){
+                        cb(null);
+                    })
+                    .catch(function(err){
+                        cb(err);
+                    })
+            }
+        })
+        .catch(function (err) {
+            cb(err);
+        })
+}
 
 /**
  * get WeChat js SDK config params
@@ -89,7 +184,7 @@ exports.getwechatmenuconfig= api.getMenuConfig(function(err,result){
  * @return {String}
  * @api public
  */
-exports.getwechatjsconfig = function(req,res,next){
+exports.getWechatJsConfig = function(req,res,next){
     assert.ok(req.body.url&&req.body.url.length<50&&req.body.url.length>0,'url should not be blank');
     var param = {
         debug: true,
@@ -102,9 +197,30 @@ exports.getwechatjsconfig = function(req,res,next){
             next(err);
         }
         else{
-            console.log(result);
+//            console.log(result);
             res.json(result);
         }
     });
 };
 
+//todo: create the menu create function and save the menu into DB
+var menu = fs.readFileSync('./libs/wechat-menu.json');
+if(menu){
+    menu=JSON.parse(menu)
+}
+//console.log(menu);
+
+exports.updateWechatMenu=api.createMenu(menu,function(err,result){
+//    console.log(err);
+//    console.log(result);
+});
+
+exports.getWechatMenu = api.getMenu(function(err,result){
+//    console.log(err);
+//    console.log(result);
+});
+
+exports.getWechatMenuConfig= api.getMenuConfig(function(err,result){
+//    console.log(err);
+//    console.log(result);
+});

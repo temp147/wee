@@ -11,11 +11,11 @@ var config = require('../libs/config');
 var oauth = new Oauth(wcconfig.mp.appid,wcconfig.secret);
 
 
-exports.getauthurl = function (req, res) {
+exports.getAuthUrl = function (req, res) {
     res.json({url:oauth.getAuthorizeURL(wcconfig.oauthretureurl,'state','snsapi_userinfo')});
 };
 
-exports.oauth = function (req,res,next){
+exports.verifyOauth = function (req,res,next){
     oauth.getAccessToken(req.query.code,function(err,result){
         if(err){
             err.status=401;
