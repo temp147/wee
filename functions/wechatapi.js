@@ -35,10 +35,14 @@ var api = new Wechatapi(wcconfig.mp.appid,wcconfig.secret
     ,
 //get the token from database
     function(cb){
-        Wechatkey.findOne({where:{
+        Wechatkey.findOrCreate({where:{
             keytype: 'access_token'
+            },
+            defaults: {
+                keyvalues:'{"accessToken":"Zpx5AhKQt70gnz5G-NzwhqcL4vAH-nz-WF94vsrevPs6VDQenkF4lfc_LXopeBVkxoRvlkjM1TDluBQp0cCgqAwhnMLcwHqFaayeBjL8-fQ","expireTime":1435505083212}',
+                creator:'wechatapi getter function'
             }
-        }).then(function(wechatkey){
+        }).spread(function(wechatkey,created){
 //            console.log(wechatkey);
             if(wechatkey){
 //                console.log(JSON.parse(wechatkey.keyvalues));
@@ -54,12 +58,20 @@ var api = new Wechatapi(wcconfig.mp.appid,wcconfig.secret
     }
 //save the token to database
     ,function(token,cb){
-        Wechatkey.findOne({where:{
+        Wechatkey.findOrCreate({where:{
             keytype:'access_token'
+            },
+            defaults: {
+                keyvalues:JSON.stringify(token),
+                creator:'wechatapi setter function'
             }
-        }).then(function(wechatkey){
-            if(wechatkey){
+        }).spread(function(wechatkey,created){
+            if(created){
+                cb(null,null);
+            }
+            else{
                 wechatkey.keyvalues=JSON.stringify(token);
+                wechatkey.modifier= 'wechatapi setter function';
                 wechatkey.save()
                     .then(function(){
                         cb(null,null);
@@ -118,7 +130,8 @@ function getTicketToken(type,cb){
         },
         defaults:{
             keytype: type,
-            keyvalues:"{ 'ticket': 'sM4AOVdWfPE4DxkXGEs8VMqZSZfE1OkvX6gmFigI2I-Q_xtHl_rruJIyb_Wa1pVwyZqt2pmPRSeU2fvXZ7X5eg','expireTime': '1435503264637' }"
+            keyvalues:"{ 'ticket': 'sM4AOVdWfPE4DxkXGEs8VMqZSZfE1OkvX6gmFigI2I-Q_xtHl_rruJIyb_Wa1pVwyZqt2pmPRSeU2fvXZ7X5eg','expireTime': '1435503264637' }",
+            creator: 'Ticket Token getter function'
         }
     })
         .spread(function(wechatkey,created){
@@ -151,7 +164,8 @@ function saveTicketToken(type,ticketToken,cb){
         },
         defaults:{
             keytype:type,
-            keyvalues:JSON.stringify(ticketToken)
+            keyvalues:JSON.stringify(ticketToken),
+            creator: 'Ticket Token setter function'
         }
     })
         .spread(function(wechatkey,created){
@@ -160,7 +174,8 @@ function saveTicketToken(type,ticketToken,cb){
                 cb(null)
             }
             else{
-                wechatkey.keyvalues=JSON.stringify(ticketToken);
+                wechatkey.keyvalues = JSON.stringify(ticketToken);
+                wechatkey.modifier = 'Ticket Token setter function';
                 wechatkey.save()
                     .then(function(){
                         cb(null);
