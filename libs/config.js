@@ -11,5 +11,6 @@ module.exports={
     dbname: 'wee',//database name
     dbuser: 'root',//database user name
     dbpass: 'zaq1xsw@',//database user password
-    crossdomain:    '*' //cross domain settings .
+    crossdomain: '*', //cross domain settings .
+    env:    'development' //set the environment param
 };

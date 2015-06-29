@@ -8,9 +8,7 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 //load config file
-var wcconfig = require('./libs/wcconfig');
 var config = require('./libs/config');
-
 //use log4js for the log
 var log4js = require('log4js');
 //load the log configuration
@@ -19,21 +17,38 @@ var logger = log4js.getLogger();
 
 var toobusy = require('toobusy');
 
+var expressJwt = require('express-jwt'); //https://npmjs.org/package/express-jwt
+
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+
+//set the runtime environment
+app.set('env',config.env);
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 //app.use(logger('dev'));
+//use jwt to protect api
+app.use('/app', expressJwt({secret: config.jwtsecret}));
+//set the log level
 app.use(log4js.connectLogger(log4js.getLogger("http"), { level: 'auto' }));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(function(err, req, res, next){
+    if (err.constructor.name === 'UnauthorizedError') {
+        res.status(401).json('{message:Unauthorized}');
+    }
+});
+
+//cross domain settings
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', config.crossdomain);
@@ -102,7 +117,6 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 
-//todo: finish the jwt token setting
-//todo: add the user model
+
 //todo: test the forever function
 //todo: much more famaliar with mongoDB

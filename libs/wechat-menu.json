@@ -1,62 +1,53 @@
 {
     "button": [
         {
-            "name": "Acc",
+            "type": "view",
+            "name": "我要洗车",
+            "url": "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0ce2cd3f023755bf&redirect_uri=http%3A%2F%2Fwechatdev.ciicsh.com%2Fcallback.html&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect"
+        },
+        {
+            "name": "有奖活动",
             "sub_button": [
                 {
-                    "type": "click",
-                    "name": "account",
-                    "key": "V1001_MY_ACCOUNT"
+                    "type": "view",
+                    "name": "游戏送礼",
+                    "url": "http://wechatdev.ciicsh.com/"
                 },
                 {
                     "type": "click",
-                    "name": "project",
-                    "key": "V1002_BID_PROJECTS"
+                    "name": "活动推荐",
+                    "key": "V1001_EVENT"
                 },
                 {
-                    "type": "click",
-                    "name": "plan",
-                    "key": "V1003_RETURN_PLAN"
-                },
-                {
-                    "type": "click",
-                    "name": "detail",
-                    "key": "V1004_TRANS_DETAIL"
-                },
-                {
-                    "type": "click",
-                    "name": "reg",
-                    "key": "V1005_REGISTER_BIND"
+                    "type": "scancode_push",
+                    "name": "扫码有奖",
+                    "key": "rselfmenu_0_1",
+                    "sub_button": [ ]
                 }
             ]
         },
         {
-            "type": "view",
-            "name": "site",
-            "url": "http://wechatdev.ciicsh.com/"
-        },
-        {
-            "name": "task",
+            "name": "洗车助手",
             "sub_button": [
                 {
                     "type": "view",
-                    "name": "task1",
-                    "url": "http://wechatdev.ciicsh.com/"
+                    "name": "下载洗车",
+                    "url": "http://172.16.4.114/client-web/jssdk.html"
                 },
                 {
                     "type": "click",
-                    "name": "task2",
-                    "key": "V1001_GOOD"
+                    "name": "客服热线",
+                    "key": "V1001_CSHP"
                 },
                 {
                     "type": "view",
-                    "name": "join us",
+                    "name": "问题反馈",
                     "url": "http://wechatdev.ciicsh.com/"
                 },
                 {
-                    "type": "view",
-                    "name": "app down",
-                    "url": "http://qiaole.sinaapp.com/"
+                    "type": "location_select",
+                    "name": "发送位置",
+                    "key": "rselfmenu_0_2"
                 }
             ]
         }
