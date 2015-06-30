@@ -18,6 +18,7 @@ module.exports = function(app){
 //    get login url
     app.get('/login/wechat/getauthurl',wechatoauth.getAuthUrl);
 
+    app.options('/wechat/sdk/getjsconfig',option);
     app.use('/wechat/sdk/getjsconfig',wechatapijssdk.getWechatJsConfig);
 
     app.use('/wechat/menu/create',wechatapimenu.createMenu);
