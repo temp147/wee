@@ -21,13 +21,19 @@
 
 module.exports = function(sequelize,DataTypes){
     var User = sequelize.define('userinfo',{
-        userId:      {
-            type:DataTypes.STRING(36),
+        id:{
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
             primaryKey:true
         },
-        openID:{type:DataTypes.STRING(128)},
-        mobilePhone:   {type:DataTypes.STRING(40)},
+        userId:      {
+            type:DataTypes.UUID,
+            defaultValue:DataTypes.UUIDV4,
+            unique:true
+        },
+        mobilePhone:   {type:DataTypes.STRING(40),unique:true},
         userName: {type:DataTypes.STRING(128),allowNull: false},
+        password: {type:DataTypes.STRING(256)},
         gender:    {type:DataTypes.STRING(1)},
         lastLoginDate:{type:DataTypes.DATE},
         lastOrderDate:{type:DataTypes.DATE},

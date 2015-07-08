@@ -6,13 +6,19 @@
 
 module.exports = function(sequelize,DataTypes){
     var Address = sequelize.define('address',{
-        addressId:  {
-            type:DataTypes.STRING(36),
+        id:{
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
             primaryKey:true
         },
+        addressId:  {
+            type:DataTypes.UUID,
+            defaultValue:DataTypes.UUIDV4,
+            unique:true
+        },
         userId:      {
-            type:DataTypes.STRING(36),
-            primaryKey:true
+            type:DataTypes.UUID,
+            unique:true
         },
         addressLocation:{type:DataTypes.STRING(128),allowNull: false},
         addressComments:    {type:DataTypes.STRING(512)},

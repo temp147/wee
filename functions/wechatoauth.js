@@ -8,6 +8,10 @@ var jwt = require('jsonwebtoken');
 var wcconfig = require('../libs/wcconfig');
 var config = require('../libs/config');
 var token = require('./wechattoken');
+var models = require('../models/');
+
+var Wechatuser = models.wechatuser;
+
 
 var oauth = new Oauth(wcconfig.mp.appid,wcconfig.secret,token.getOauthToken,token.saveOauthToken);
 
@@ -37,7 +41,10 @@ exports.verifyOauth = function (req,res,next){
                     next(err);
                 }
                 else{
-                    var token = jwt.sign(result.openid,config.jwtsecret,{ expiresInMinutes: 60*5});
+                    var userProfile={};
+//                    userProfile.userId=userId;
+                    userProfile.openId=result.openid;
+                    var token = jwt.sign(userProfile,config.jwtsecret,{ expiresInMinutes: 60*5});
                     res.json({'token':token});
                 }
             })

@@ -1,3 +1,4 @@
 /node_modules/ 
 /logs/
 /access_token.txt
+/libs/wcconfig.js

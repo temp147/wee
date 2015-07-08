@@ -5,6 +5,7 @@
 //load the models
 var models = require('../models');
 var Wechatkey = models.wechatkey;
+var Wechatuser = models.wechatuser;
 
 exports.getAccessToken = function(cb){
     Wechatkey.findOrCreate({where:{
@@ -138,27 +139,27 @@ exports.saveTicketToken = function (type,ticketToken,cb){
  * get WeChat OauthToken by openid
  *
  * @param {String} openid
- * @param {String} cb  {err,OauthToken}
+ * @param {String} cb  {err,oauthToken}
  * @api public
  */
 exports.getOauthToken = function (openid,cb){
 //    console.log(type);
-    Wechatkey.findOrCreate({
+    Wechatuser.findOrCreate({
         where:{
-            keytype: openid
+            OepnId: openid
         },
         defaults:{
-            keytype: openid,
-            keyvalues:"{ 'ticket': '','expireTime': '1435503264637' }",
+            openId: openid,
+            oauthToken:"{ 'ticket': '','expireTime': '1435503264637' }",
             creator: 'Oauth Token getter function'
         }
     })
-        .spread(function(wechatkey,created){
+        .spread(function(wechatuser,created){
             if(created){
                 cb(null,'')
             }
             else{
-                cb(null,JSON.parse(wechatkey.keyvalues))
+                cb(null,JSON.parse(wechatuser.oauthToken))
             }
         })
         .catch(function(err){
@@ -177,25 +178,25 @@ exports.getOauthToken = function (openid,cb){
  */
 exports.saveOauthToken = function (openid,OauthToken,cb){
 //    console.log(ticketToken);
-    Wechatkey.findOrCreate({
+    Wechatuser.findOrCreate({
         where:{
-            keytype:openid
+            openId:openid
         },
         defaults:{
-            keytype:openid,
-            keyvalues:JSON.stringify(OauthToken),
+            openId:openid,
+            oauthToken:JSON.stringify(OauthToken),
             creator: 'Oauth Token setter function'
         }
     })
-        .spread(function(wechatkey,created){
+        .spread(function(wechatuser,created){
             if(created){
 //                console.log(created);
                 cb(null)
             }
             else{
-                wechatkey.keyvalues = JSON.stringify(OauthToken);
-                wechatkey.modifier = 'Oauth Token setter function';
-                wechatkey.save()
+                wechatuser.oauthToken = JSON.stringify(OauthToken);
+                wechatuser.modifier = 'Oauth Token setter function';
+                wechatuser.save()
                     .then(function(){
                         cb(null);
                     })

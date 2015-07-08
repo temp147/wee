@@ -1,36 +1,44 @@
 /**
- * Created by root on 6/28/15.
+ * Created by root on 7/1/15.
  */
-//carList: [{carName: String, carModel: String, carColor: String, carNumber: String, carComments: String}]
 
+/*
+ id: int
+ regPhoneNum: String,
+ regPasscode: String,
+ status: String,
+ regPscValidTime: String,
+ creator:String,
+ modifier:String,
+ */
 
 module.exports = function(sequelize,DataTypes){
-    var Car = sequelize.define('carinfo',{
+    var regpasscode = sequelize.define('regpasscode',{
         id:{
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey:true
         },
-        carId:  {
+        messageId:  {
             type:DataTypes.UUID,
-            defaultValue:DataTypes.UUIDV4,
-            unique:true
+            default: DataTypes.UUIDV4,
+            unique: true
         },
-        userId:      {
-            type:DataTypes.UUID,
-            unique:true
+        messagetype: {
+            type: DataTypes.STRING(8),
+            allowNull:false
         },
-        carName:{type:DataTypes.STRING(128),allowNull: false},
-        carModel:   {type:DataTypes.STRING(40)},
-        carColor: {type:DataTypes.STRING(24)},
-        carComments:    {type:DataTypes.STRING(512)},
+        regPhoneNum:{type:DataTypes.STRING(40)},
+        regPassCode:   {type:DataTypes.STRING(40)},
+        status:    {type:DataTypes.STRING(8)},
+        regPscValidTime:     {type:DataTypes.DATE},
         creator:    {type:DataTypes.STRING(40)},
         modifier:   {type:DataTypes.STRING(40)}
     }, {
         timestamps: true,
         paranoid:true,
         freezeTableName:true,
-        tableName:'carinfo'
+        tableName:'regpasscode'
     }, {
         indexes:[
             {}
@@ -48,5 +56,5 @@ module.exports = function(sequelize,DataTypes){
             }
         }
     });
-    return Car;
+    return regpasscode;
 };
