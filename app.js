@@ -17,9 +17,13 @@ var logger = log4js.getLogger();
 
 var toobusy = require('toobusy');
 
-var expressJwt = require('express-jwt'); //https://npmjs.org/package/express-jwt
+var expressJwt = require('express-jwt'); //https://npmjs.org/package/express-jw
+
+var mongoInit = require('./functions/mongoInit.js');
 
 var app = express();
+
+mongoInit.init(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -47,6 +51,9 @@ app.use(function(err, req, res, next){
         res.status(401).json('{message:Unauthorized}');
     }
 });
+
+
+
 
 //cross domain settings
 app.use(function (req, res, next) {
