@@ -1,6 +1,7 @@
 /**
  * Created by root on 10/29/15.
  */
+/*
 
 var shortId = require('shortid');
 
@@ -39,5 +40,28 @@ module.exports = function(app) {
             readstream.pipe(res);
         }
     };
+};
+*/
+
+var formidable=require('formidable');
+var grid= require('gridfs-stream');
+var fs = require('fs');
+var util = require('util');
+
+exports.fileUpload = function(req,res,next){
+    var form = new formidable.IncomingForm();
+    form.uploadDir = __dirname + "/tempdata";
+    form.keepExtensions = true;
+    form.parse(req,function(err,fields,files){
+        if(!err){
+            res.writeHead(200, {'content-type': 'text/plain'});
+            res.write('received upload:\n\n');
+            res.end(util.inspect({fields: fields, files: files}));
+        }
+        else{
+            err.status=500;
+            next(err);
+        }
+    })
 };
 

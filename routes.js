@@ -7,6 +7,8 @@ var wechatreply = require('./functions/wechatreply');
 var wechatapijssdk   = require('./functions/wechatapijssdk');
 var wechatapimenu   =   require('./functions/wechatapimenu');
 var echatsLineOption = require('./functions/echartsLineOption');
+var file = require('./functions/fileController');
+
 //handle the http options method,response 204
 function option (req,res){
     res.status(204);
@@ -24,6 +26,7 @@ module.exports = function(app){
 
     app.use('/wechat/menu/create',wechatapimenu.createMenu);
     app.use('/wechat/getoption',echatsLineOption.getLineOption);
+    app.use('/wechat/fileupload',file.fileUpload);
 
 
 //    wechat communicate api
