@@ -44,9 +44,10 @@ module.exports = function(app) {
 */
 
 var formidable=require('formidable');
-var grid= require('gridfs-stream');
+var gridfs= require('gridfs-stream');
 var fs = require('fs');
-var util = require('util');
+var mongoose = require('mongoose');
+
 
 exports.fileUpload = function(req,res,next){
     var form = new formidable.IncomingForm();
@@ -54,9 +55,31 @@ exports.fileUpload = function(req,res,next){
     form.keepExtensions = true;
     form.parse(req,function(err,fields,files){
         if(!err){
-            res.writeHead(200, {'content-type': 'text/plain'});
-            res.write('received upload:\n\n');
-            res.end(util.inspect({fields: fields, files: files}));
+            var uploadFile=null;
+            for(var k in files){
+                uploadFile=files[k];
+            }
+//            gridfs.mongo=mongoose.mongo;
+            var conn = mongoose.createConnection('mongodb://localhost/photo_app');
+            conn.on('error', console.error.bind(console, 'connection error:'));
+            conn.once('open', function () {
+                var gfs = gridfs(conn.db,mongoose.mongo);
+                var is;
+                var os;
+                //get the extenstion of the file
+//                var extension = uploadFile.path.split(/[. ]+/).pop();
+                is = fs.createReadStream(uploadFile.path);
+//                os = gfs.createWriteStream({ filename: shortid.generate()+'.'+extension });
+                os = gfs.createWriteStream({ filename: uploadFile.name});
+                is.pipe(os);
+
+                os.on('close', function (file) {
+                    //delete file from temp folder
+                    fs.unlink(uploadFile.path, function() {
+                        res.json(200, file);
+                    });
+                })
+            });
         }
         else{
             err.status=500;
@@ -65,3 +88,38 @@ exports.fileUpload = function(req,res,next){
     })
 };
 
+exports.getFileById=function(req, res, next) {
+
+    var conn = mongoose.createConnection('mongodb://localhost/photo_app');
+    conn.on('error', console.error.bind(console, 'connection error:'));
+    conn.once('open', function () {
+        var gfs = gridfs(conn.db,mongoose.mongo);
+        gfs.findOne({_id: req.params.fileid},function(err,file){
+           if(err) {
+               err.status = 500;
+               next(err)
+           }else if(!file){
+               res.status('404').send('file does not exits');
+           }
+           else{
+               var readstream = gfs.createReadStream({
+                   _id: req.params.fileid
+               });
+               req.on('error', function(err) {
+                   err.status = 500;
+                   next(err)
+               });
+               readstream.on('error', function (err) {
+                   err.status = 500;
+                   next(err)
+               });
+               res.header("Content-Type", file.filename.split(/[. ]+/).pop());
+               res.header("Content-Disposition", "attachment; filename="+file.filename);
+               readstream.pipe(res);
+           }
+
+
+        })
+
+    });
+};

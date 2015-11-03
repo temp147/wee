@@ -27,6 +27,7 @@ module.exports = function(app){
     app.use('/wechat/menu/create',wechatapimenu.createMenu);
     app.use('/wechat/getoption',echatsLineOption.getLineOption);
     app.use('/wechat/fileupload',file.fileUpload);
+    app.use('/wechat/filedownload/:fileid',file.getFileById);
 
 
 //    wechat communicate api
